@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Example Login Form</title>
+</head>
+
+<body>
+
+  <!-- user input-->
+  Username:<br />
+  <input type="text" name="username" placeholder="Username" id="username" required /><br /><br />
+  Password:<br />
+  <input type="password" name="password" placeholder="Password" id="password" required /><br /><br />
+
+  <!-- submit button -->
+  <input type="submit" value="login" onclick="login()" /><br></br>
+  <input type="button" value="login with Google" onclick="login()" />
+  <input type="button" value="login with Facebook" onclick="login()" />
+</body>
+
+<script>
+  const login = async () => {
+    try {
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      if (!username) {
+       throw new Error("UserName Is Required")
+      }
+      if (!password) {
+       throw new Error("password Is Required")
+      }
+      const res = await fetch("/afterLogin", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      let data = await res.json()
+
+      console.log(data)
+      if (data.statusCode === 200) {
+        window.location.href = "/success"
+      } else {
+        throw new Error(data.message)
+        // alert(data.message)
+      }
+    } catch (err) {
+      alert(err.message)
+    }
+
+  };
+</script>
+
+</html>
